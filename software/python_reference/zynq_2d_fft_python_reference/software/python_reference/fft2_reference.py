@@ -126,6 +126,7 @@ def run_one(arr: np.ndarray, name: str, out_dir: Path) -> dict:
     for d in [input_dir, ref_dir, visual_dir, results_dir]:
         ensure_dir(d)
 
+    arr = np.clip(np.rint(arr), 0, 255).astype(np.float64)
     h, w = arr.shape
 
     # Input files
