@@ -9,7 +9,10 @@
 #include <string>
 
 #if defined(USE_AP_FIXED)
-static const double MAX_ABS_TOLERANCE = 1024.0;
+#ifndef HLS_TEST_MAX_ABS_TOLERANCE
+#define HLS_TEST_MAX_ABS_TOLERANCE 1024.0
+#endif
+static const double MAX_ABS_TOLERANCE = HLS_TEST_MAX_ABS_TOLERANCE;
 #else
 static const double MAX_ABS_TOLERANCE = 1e-6;
 #endif

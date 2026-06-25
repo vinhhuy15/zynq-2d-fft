@@ -426,15 +426,15 @@ C/RTL co-simulation: PASS
 Kết quả C simulation fixed-point với ảnh `square_64x64`:
 
 ```text
-Real MAE: 2.6286681595
-Real MSE: 257.9292729865
-Real RMSE: 16.0601766175
-Real MaxAbs: 457.9674316349
+Real MAE: 0.2700051121
+Real MSE: 2.8843816629
+Real RMSE: 1.6983467440
+Real MaxAbs: 37.5489746036
 
-Imag MAE: 3.1109035907
-Imag MSE: 306.0405963281
-Imag RMSE: 17.4940160149
-Imag MaxAbs: 484.1168578841
+Imag MAE: 0.2147809989
+Imag MSE: 1.3439980728
+Imag RMSE: 1.1593093085
+Imag MaxAbs: 25.8147827409
 ```
 
 Ngưỡng pass đang dùng:
@@ -459,17 +459,16 @@ Estimated Fmax: 136.99 MHz
 
 | Tài nguyên | Dùng | Có sẵn | Tỷ lệ |
 |---|---:|---:|---:|
-| BRAM_18K | 42 | 280 | 15% |
-| DSP | 186 | 220 | 84% |
-| FF | 20509 | 106400 | 19% |
-| LUT | 29674 | 53200 | 55% |
+| BRAM_18K | 26 | 280 | 9% |
+| DSP | 8 | 220 | 3% |
+| FF | 10313 | 106400 | 9% |
+| LUT | 12126 | 53200 | 22% |
 
 Nhận xét:
 
-- BRAM, FF và LUT vẫn còn trong giới hạn.
-- DSP dùng rất cao, khoảng 84%.
-- Nguyên nhân chính là phiên bản hiện tại vẫn dùng `std::cos()` và `std::sin()` để tạo twiddle factor trong phần HLS.
-- Bước tối ưu tiếp theo nên thay `sin/cos` runtime bằng bảng tra cứu twiddle factor.
+- Phiên bản hiện tại đã thay `std::cos()` và `std::sin()` runtime bằng bảng twiddle lookup 64 điểm.
+- DSP giảm từ 186 xuống 8, tức từ khoảng 84% xuống khoảng 3% trên Zynq-7020.
+- LUT, FF và BRAM cũng giảm, nên phiên bản này phù hợp hơn để làm baseline trước khi tích hợp Vivado.
 
 ---
 
@@ -621,25 +620,23 @@ Nếu sau này muốn dùng AXI DMA/AXI Stream, cần viết thêm phiên bản 
 
 ## 14. Định hướng tối ưu tiếp theo
 
-Phiên bản hiện tại đúng về mặt kiểm chứng, nhưng chưa tối ưu tài nguyên. Các bước nên làm tiếp:
+Phiên bản hiện tại đã đúng về mặt kiểm chứng và đã có tối ưu twiddle lookup. Các bước nên làm tiếp:
 
-1. Thay `std::sin()` và `std::cos()` bằng bảng twiddle lookup.
-2. Test lại C simulation và C/RTL co-simulation.
-3. So sánh tài nguyên DSP trước/sau khi dùng lookup table.
-4. Thử các kiểu fixed-point nhỏ hơn:
+1. Test thêm các ảnh mẫu khác, không chỉ `square_64x64`.
+2. Thử các kiểu fixed-point nhỏ hơn:
    - `ap_fixed<32,20>`
    - `ap_fixed<24,16>`
    - `ap_fixed<24,12>`
    - `ap_fixed<20,12>`
-5. Lập bảng trade-off giữa sai số và tài nguyên.
-6. Sau khi HLS ổn, export IP và tích hợp Vivado.
-7. Viết host application trên ARM PS để cấp buffer và đọc kết quả.
+3. Lập bảng trade-off giữa sai số và tài nguyên.
+4. Sau khi HLS ổn, export IP và tích hợp Vivado.
+5. Viết host application trên ARM PS để cấp buffer và đọc kết quả.
 
 Bảng kết quả nên có trong báo cáo:
 
 | Phiên bản | Real MAE | Imag MAE | MaxAbs Real | MaxAbs Imag | DSP | LUT | BRAM |
 |---|---:|---:|---:|---:|---:|---:|---:|
-| ap_fixed<32,20> | 2.6287 | 3.1109 | 457.9674 | 484.1169 | 186 | 29674 | 42 |
+| ap_fixed<32,20> + twiddle lookup | 0.2700 | 0.2148 | 37.5490 | 25.8148 | 8 | 12126 | 26 |
 | ap_fixed nhỏ hơn | cần đo | cần đo | cần đo | cần đo | cần đo | cần đo | cần đo |
 
 ---

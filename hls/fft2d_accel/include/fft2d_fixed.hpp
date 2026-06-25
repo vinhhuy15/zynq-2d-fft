@@ -13,7 +13,13 @@
 
 #if defined(USE_AP_FIXED)
 #include <ap_fixed.h>
-typedef ap_fixed<32, 20, AP_RND, AP_SAT> data_t;
+#ifndef FFT2D_FIXED_TOTAL_BITS
+#define FFT2D_FIXED_TOTAL_BITS 32
+#endif
+#ifndef FFT2D_FIXED_INTEGER_BITS
+#define FFT2D_FIXED_INTEGER_BITS 20
+#endif
+typedef ap_fixed<FFT2D_FIXED_TOTAL_BITS, FFT2D_FIXED_INTEGER_BITS, AP_RND, AP_SAT> data_t;
 #else
 typedef double data_t;
 #endif
