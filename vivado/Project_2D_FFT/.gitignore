@@ -1,0 +1,14 @@
+Project_2D_FFT.cache/
+Project_2D_FFT.hw/
+Project_2D_FFT.ip_user_files/
+Project_2D_FFT.sim/
+*.jou
+*.log
+*.str
+*.wdb
+*.pb
+*.dcp
+*.rpt
+*.runs/
+*.gen/
+*.sdk/
