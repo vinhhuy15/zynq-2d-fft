@@ -21,7 +21,7 @@
     <Option Name="ActiveSimSet" Val="sim_1"/>
     <Option Name="DefaultLib" Val="xil_defaultlib"/>
     <Option Name="ProjectType" Val="Default"/>
-    <Option Name="IPRepoPath" Val="$PPRDIR/../2D_FFT/zynq-2d-fft/hls/fft2d_accel/fft2d_accel_prj_2018/solution1/impl/ip"/>
+    <Option Name="IPRepoPath" Val="$PPRDIR/../hls/fft2d_accel/fft2d_accel_prj_2018/solution1/impl/ip"/>
     <Option Name="IPOutputRepo" Val="$PCACHEDIR/ip"/>
     <Option Name="IPCachePermission" Val="read"/>
     <Option Name="IPCachePermission" Val="write"/>
